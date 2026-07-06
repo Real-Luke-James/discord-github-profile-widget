@@ -1,0 +1,28 @@
+{
+  "name": "discord-github-profile-widget",
+  "version": "1.0.0",
+  "description": "Automatically sync your GitHub profile to your Discord Profile Widget every hour using GitHub Actions.",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "keywords": [
+    "discord",
+    "discord-widget",
+    "discord-profile",
+    "github",
+    "github-profile",
+    "github-actions",
+    "automation",
+    "nodejs"
+  ],
+  "author": "AdityaLF",
+  "license": "MIT"
+}
