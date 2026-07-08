@@ -22,7 +22,7 @@ export async function updateDiscordWidget(config, stats) {
           value: stats.forks
         },
         {
-          type: 2, // Number
+          type: 1, // Number
           name: 'repos',
           value: stats.repos
         },
@@ -32,7 +32,7 @@ export async function updateDiscordWidget(config, stats) {
           value: stats.streak
         },
         {
-          type: 2, // Number
+          type: 1, // Number
           name: 'contributions',
           value: stats.contributions
         },
