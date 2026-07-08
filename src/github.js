@@ -20,7 +20,8 @@ export async function getGitHubStats(username, token) {
   const user = initialData.user;
   const contributionCalendar = user.contributionsCollection?.contributionCalendar;
   
-  const contributions = contributionCalendar?.totalContributions || 0;
+  let contributionsInt = contributionCalendar?.totalContributions || 0;
+  const contributions = contributionsInt.toString();
   const followers = user.followers?.totalCount || 0;
   const prs = user.pullRequests?.totalCount || 0;
 
@@ -87,6 +88,8 @@ export async function getGitHubStats(username, token) {
   const defaultAvatarUrl = 'https://github.com/identicons/guest.png';
   const avatar = user.avatarUrl || defaultAvatarUrl;
 
+  let reposNum = allRepos.length.toString();
+  
   return {
     username,
     displayName: user.name || '',
@@ -98,7 +101,7 @@ export async function getGitHubStats(username, token) {
     last_commit: lastCommit,
     stars: totalStars,
     forks: totalForks,
-    repos: allRepos.length,
+    repos: reposNum,
     streak,
     contributions,
     top_language: topLanguage
