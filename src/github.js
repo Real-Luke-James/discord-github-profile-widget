@@ -45,15 +45,18 @@ export async function getGitHubStats(username, token) {
     }
   }
 
-  let totalStars = 0;
-  let totalForks = 0;
+  let totalStarsInt = 0;
+  let totalForksInt = 0;
   
   for (const repo of allRepos) {
     if (repo) {
-      totalStars += repo.stargazerCount || 0;
-      totalForks += repo.forkCount || 0;
+      totalStarsInt += repo.stargazerCount || 0;
+      totalForksInt += repo.forkCount || 0;
     }
   }
+
+  let totalStars = totalStarsInt.toString();
+  let totalForks = totalForksInt.toString();
 
   const sortedRepos = [...allRepos].sort((a, b) => {
     if (!a.pushedAt) return 1;
@@ -96,8 +99,8 @@ export async function getGitHubStats(username, token) {
     prs,
     last_repo: lastRepo,
     last_commit: lastCommit,
-    stars: totalStars.toString(),
-    forks: totalForks.toString(),
+    stars: totalStars,
+    forks: totalForks,
     repos: allRepos.length,
     streak,
     contributions,
