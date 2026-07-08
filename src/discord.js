@@ -12,12 +12,12 @@ export async function updateDiscordWidget(config, stats) {
     data: {
       dynamic: [
         {
-          type: 2, // Number
+          type: 1, // Number
           name: 'stars',
           value: stats.stars
         },
         {
-          type: 2, // Number
+          type: 1, // Number
           name: 'forks',
           value: stats.forks
         },
