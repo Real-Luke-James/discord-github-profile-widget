@@ -1,5 +1,6 @@
 # Discord GitHub Profile Widget
 
+
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D22.0.0-blue.svg)](https://nodejs.org/)
 
 Automatically sync your GitHub profile to your Discord Profile Widget every hour using GitHub Actions.
