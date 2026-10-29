@@ -1,44 +1,33 @@
-import dotenv from 'dotenv';
-import { getGitHubStats } from './github.js';
-import { updateDiscordWidget } from './discord.js';
+import { runSync } from './sync.js';
 
-dotenv.config();
+export default {
+  async scheduled(event, env, ctx) {
+    await runSync(env);
+  },
 
-async function main() {
-  const {
-    GH_USERNAME,
-    GH_PAT,
-    DISCORD_APPLICATION_ID,
-    DISCORD_USER_ID,
-    DISCORD_BOT_TOKEN
-  } = process.env;
+  async fetch(request, env, ctx) {
+    const authHeader = request.headers.get('Authorization');
+    const expected = `Bearer ${env.MANUAL_TRIGGER_TOKEN}`;
 
-  const missing = [];
-  if (!GH_USERNAME) missing.push('GH_USERNAME');
-  if (!GH_PAT) missing.push('GH_PAT');
-  if (!DISCORD_APPLICATION_ID) missing.push('DISCORD_APPLICATION_ID');
-  if (!DISCORD_USER_ID) missing.push('DISCORD_USER_ID');
-  if (!DISCORD_BOT_TOKEN) missing.push('DISCORD_BOT_TOKEN');
+    if (!env.MANUAL_TRIGGER_TOKEN || authHeader !== expected) {
+      return new Response('Unauthorized', { status: 401 });
+    }
 
-  if (missing.length > 0) {
-    console.error(`Error: Missing required environment variables: ${missing.join(', ')}`);
-    process.exit(1);
+    try {
+      await runSync(env);
+      return new Response('Sync completed successfully!', { status: 200 });
+    } catch (error) {
+      return new Response(`Sync failed: ${error.message}`, { status: 500 });
+    }
   }
+};
+
+if (typeof process !== 'undefined' && process.argv && process.argv[1]) {
+  const dotenv = (await import('dotenv')).default;
+  dotenv.config();
 
   try {
-    const stats = await getGitHubStats(GH_USERNAME, GH_PAT);
-
-    console.log('GitHub Stats Compiled:', JSON.stringify(stats, null, 2));
-
-    const discordConfig = {
-      applicationId: DISCORD_APPLICATION_ID,
-      userId: DISCORD_USER_ID,
-      identityId: DISCORD_USER_ID,
-      botToken: DISCORD_BOT_TOKEN
-    };
-    
-    await updateDiscordWidget(discordConfig, stats);
-    console.log('Sync completed successfully!');
+    await runSync(process.env);
   } catch (error) {
     console.error('Sync failed:', error.message);
     if (error.stack) {
@@ -47,5 +36,3 @@ async function main() {
     process.exit(1);
   }
 }
-
-main();

@@ -1,26 +1,66 @@
 name: Update Discord Profile Widget
 
+# Default scheduler switch (edit this line, no Settings needed):
+#   "true"  -> run this GitHub Actions workflow
+#   "false" -> disable this workflow and use the Cloudflare Worker instead
+env:
+  DEFAULT_ENABLED: "true"
+
 on:
   schedule:
     - cron: '0 * * * *'
   workflow_dispatch:
+    inputs:
+      force_run:
+        description: 'Force run even if disabled (DEFAULT_ENABLED=false or GH_ACTIONS_ENABLED=false)'
+        type: boolean
+        default: false
 
 jobs:
   update:
     runs-on: ubuntu-latest
     steps:
+      - name: Check if enabled
+        id: check
+        env:
+          GH_ACTIONS_ENABLED: ${{ vars.GH_ACTIONS_ENABLED }}
+        run: |
+          FORCE="${{ inputs.force_run }}"
+          VALUE="${GH_ACTIONS_ENABLED}"   # repo variable, if set
+          if [ -z "$VALUE" ]; then
+            VALUE="${{ env.DEFAULT_ENABLED }}"   # fallback to in-file default
+          fi
+          if [ "$FORCE" = "true" ]; then
+            VALUE="true"
+          fi
+          if [ "$VALUE" = "false" ]; then
+            ENABLED="false"
+          else
+            ENABLED="true"
+          fi
+          echo "enabled=$ENABLED" >> "$GITHUB_OUTPUT"
+          if [ "$ENABLED" = "true" ]; then
+            echo "GitHub Actions sync is enabled."
+          else
+            echo "GitHub Actions sync is disabled (DEFAULT_ENABLED=false). Skipping — use Cloudflare Worker instead."
+          fi
+
       - name: Checkout code
+        if: steps.check.outputs.enabled == 'true'
         uses: actions/checkout@v4
 
       - name: Set up Node.js
+        if: steps.check.outputs.enabled == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: '22'
 
       - name: Install dependencies
+        if: steps.check.outputs.enabled == 'true'
         run: npm install
 
       - name: Run sync script
+        if: steps.check.outputs.enabled == 'true'
         run: npm start
         env:
           GH_USERNAME: ${{ secrets.GH_USERNAME }}
@@ -28,4 +68,3 @@ jobs:
           DISCORD_APPLICATION_ID: ${{ secrets.DISCORD_APPLICATION_ID }}
           DISCORD_USER_ID: ${{ secrets.DISCORD_USER_ID }}
           DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
-

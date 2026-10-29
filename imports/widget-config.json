@@ -1,0 +1,214 @@
+{
+  "_type": "discord-widget",
+  "version": 2,
+  "display_name": "GitHub Stats",
+  "surfaces": {
+    "widget_bottom": {
+      "layout": "widget_bottom_stats",
+      "components": {
+        "stat_5": {
+          "fields": {
+            "value": {
+              "value_type": "data",
+              "presentation_type": "number",
+              "value": "contributions"
+            },
+            "label": {
+              "value_type": "custom_string",
+              "presentation_type": "text",
+              "value": "Contributions"
+            }
+          }
+        },
+        "stat_3": {
+          "fields": {
+            "value": {
+              "value_type": "data",
+              "presentation_type": "number",
+              "value": "repos"
+            },
+            "label": {
+              "value_type": "custom_string",
+              "presentation_type": "text",
+              "value": "Repos"
+            }
+          }
+        },
+        "stat_1": {
+          "fields": {
+            "value": {
+              "value_type": "data",
+              "presentation_type": "number",
+              "value": "stars"
+            },
+            "label": {
+              "value_type": "custom_string",
+              "presentation_type": "text",
+              "value": "Stars"
+            }
+          }
+        },
+        "stat_2": {
+          "fields": {
+            "value": {
+              "value_type": "data",
+              "presentation_type": "number",
+              "value": "forks"
+            },
+            "label": {
+              "value_type": "custom_string",
+              "presentation_type": "text",
+              "value": "Forks"
+            }
+          }
+        },
+        "stat_4": {
+          "fields": {
+            "value": {
+              "value_type": "data",
+              "presentation_type": "text",
+              "value": "streak"
+            },
+            "label": {
+              "value_type": "custom_string",
+              "presentation_type": "text",
+              "value": "Streak"
+            }
+          }
+        },
+        "stat_6": {
+          "fields": {
+            "value": {
+              "value_type": "data",
+              "presentation_type": "text",
+              "value": "top_language"
+            },
+            "label": {
+              "value_type": "custom_string",
+              "presentation_type": "text",
+              "value": "Top Language"
+            }
+          }
+        }
+      }
+    },
+    "add_widget_preview": {
+      "layout": "add_widget_preview_hero",
+      "components": {
+        "hero_image": {
+          "fields": {
+            "image": {
+              "value_type": "application_asset",
+              "presentation_type": "image",
+              "value": "github-widget-preview-icon"
+            }
+          }
+        }
+      }
+    },
+    "widget_top": {
+      "layout": "widget_top_contained",
+      "components": {
+        "subtitle_2": {
+          "fields": {
+            "text": {
+              "value_type": "data",
+              "presentation_type": "text",
+              "value": "last_repo"
+            },
+            "label": {
+              "value_type": "custom_string",
+              "presentation_type": "text",
+              "value": "Latest Pushed"
+            }
+          }
+        },
+        "title": {
+          "fields": {
+            "text": {
+              "value_type": "data",
+              "presentation_type": "text",
+              "value": "display_name"
+            }
+          }
+        },
+        "subtitle_1": {
+          "fields": {
+            "text": {
+              "value_type": "data",
+              "presentation_type": "text",
+              "value": "joined"
+            }
+          }
+        },
+        "subtitle_3": {
+          "fields": {
+            "text": {
+              "value_type": "data",
+              "presentation_type": "text",
+              "value": "last_commit"
+            },
+            "label": {
+              "value_type": "custom_string",
+              "presentation_type": "text",
+              "value": "Latest Commit"
+            }
+          }
+        },
+        "contained_image": {
+          "fields": {
+            "image": {
+              "value_type": "data",
+              "presentation_type": "image",
+              "value": "avatar"
+            }
+          }
+        }
+      }
+    },
+    "mini_profile": {
+      "layout": "mini_profile_hero_stat",
+      "components": {
+        "stat": {
+          "fields": {
+            "text": {
+              "value_type": "data",
+              "presentation_type": "text",
+              "value": "display_name"
+            }
+          }
+        },
+        "hero_image": {
+          "fields": {
+            "image": {
+              "value_type": "data",
+              "presentation_type": "image",
+              "value": "avatar"
+            }
+          }
+        }
+      }
+    },
+    "activity_accessory": {
+      "layout": "activity_accessory_stat",
+      "components": {
+        "stat": {
+          "fields": {
+            "text": {
+              "value_type": "data",
+              "presentation_type": "text",
+              "value": "display_name"
+            }
+          }
+        }
+      }
+    }
+  },
+  "assets": {
+    "github-widget-preview-icon": {
+      "asset_type": "image",
+      "content_type": "image/webp",
+      "image": "data:image/webp;base64,UklGRm4EAABXRUJQVlA4IGIEAABQFwCdASqAAIAAPm02lkikIqIhIIuIgA2JaQDUWEK/5F2if2+0FPjf2z/ScJ+1z/lt4IybxGaTiYn+ynnl+iPYP/WTq+eiZ+15RNbYQ4NLj/1J93sMNkMoGn1nO3wPeygR9C3LzI/D2b1IA2OO1iYRgXw3BjKO2fYuL9jtv93phAIgvULrNxNR9yfI4Ub4A8Xb9OrKrGGErqKEn8zq63I1dvq3U63YpZraCYE2n18j96XtaIaMRGqR+6Xk1qwJUQqZoAAA/vpFfapomEB7efpE2Py8weBIrSpxpfSWlMZ0aQF3gKFEY0wp4xkEFQ8Bs8NOH3O8gajIEgjky9sBaXNNpyQmtSnn/bPzahWeoXk3UhjCAG1DxLMgxwfturbKi4hAMTvSmScpkWmsaX71mQQ8U0AKb5PZuEol/JwgG73KO8HuSAjqBDbclFMPsnO987qaEUH2sf/FG8syLmqqFisNGvUyhSp5kcou/K7SBuH4qV/PCSU1/rpcRu71fh/xX74eWqQDUC6vQ/fmmWkoHJbZUQgaVa3k1URpwzIAAt9CPULED8YBvYwz6VZfXCtBqisq0t9hs8ohQvtD8BxrJ7QGzFdRdRtxeORjgbRrssE30qJwn0C3fr/P7eF7c9NawhbgMv+n3U6vTH63mURtcT9lBZAsFFamjP+jq5OQhkJbtmhAkrakfbrC2AERm5QL4Tw4g5NT9NDq2Uoc49Iwg6XvsWNL8En6q7pKC7lqFmap0UKnn8/sPZz11Jco+q7jZVK3jW1gpKeh4RCD0SMfOlqET8sHwXbq5jJbaN4kUcZqFgV55xk3CDYAADwe5N++VkEzUj+wVpO/ua5Rvc/57oUcNQYeXesx89XnUQL61bQdol4Y9Kb0bfevXewH28Fd7eZWwuVLw6gH8NGwbZUoRUTxCu87tAUPBhnfKoGNz29cn3/GjrD22GSx7Y0w6inYchcBMbg1O0zq4xqIDep58GOwAQl8TRIwJPBuEFGditRWO7IYrlzNQP8RS9W18PfGVet1wYQQhwdVrzisbIMLFbZI+XxNRqiX6ataGPQMFtWfA0jh/2/bJb94LYA6sptIAlo3tEgH6FYrv+yy/+UrDLwuJHQ05Ebgk5hhEpIWecKV2G/JfwLTcH16O2syAcJmRm1s8g4GB2G1G+hhTutkOBWHh4px0n9/2s+el+6aPuZK/mo/2WVcjBaNTeMTgsXoSkIQEVWZaD0fcIJSwOxIn+Q/GayK9ruOc7zFA5qn21Jblm53P2cP5nMV/rn+T99itLKbWPch5VSiMQ7B//d82Oub6DQrntyFyyZlBzxxHoCUz4CBMFfYuWONcf+cGgQaxo89wRcYBcdFqA/Q9oLe68/QNdUXNaujrvNpYUI98SmcIVi5s1X22PCQrf/2Q5cRVtWfwj4/HHRNnEPhTimhMZL9BSkx429twFZfnFQMsTaJA5fG606Il08eW9XkT8u9nrRr0Oi8q97z7SMIIUjPwAAAAAA="
+    }
+  }
+}

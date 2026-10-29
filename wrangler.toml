@@ -1,0 +1,11 @@
+name = "dgw"
+main = "src/index.js"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+
+# Scheduled hourly sync (Cloudflare Cron Trigger).
+# Requires a Workers plan that supports sub-daily cron schedules.
+# Disable the GitHub Actions workflow (set repo variable GH_ACTIONS_ENABLED=false)
+# when using this Worker so the two do not run simultaneously.
+[triggers]
+crons = ["0 * * * *"]

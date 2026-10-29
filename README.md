@@ -17,11 +17,18 @@ Automatically sync your GitHub profile to your Discord Profile Widget every hour
 >
 > Discord Profile Widgets are currently an experimental feature. Follow [Chloe Cinders' Blog Guide](https://chloecinders.com/blog/discord-widgets#displaying-the-widget-on-your-profile) to enable the required Discord experiments, create and publish your widget, and add it to your Discord profile before continuing.
 
+> [!TIP]
+> **Faster Setup Option**
+>
+> To avoid manually creating the widget, setting up the layout, and adding each field, you can use the [Discord-Widgets-Extension](https://github.com/TheCreativeGod/Discord-Widgets-Extension) by TheCreativeGod to import the pre-configured [`widget-config.json`](./imports/widget-config.json) file. See the [Widget Import Guide](./imports/guide.md) for step-by-step instructions.
+
 ### 1. Fork this Repository
 Click the **Fork** button at the top-right of this repository.
 
 ### 2.  Add Widget Fields
-After creating your Discord Profile Widget, add the following fields under **Games -> Widget** in the Discord Developer Portal.
+*(If you followed the [Faster Setup Option](#getting-started), you can skip this step and proceed directly to **Step 3**).*
+
+After creating your Discord Profile Widget, add the following fields under **Games -> Widget** in the [Discord Developer Portal](https://discord.com/developers/applications).
 
 > [!NOTE]
 > For a complete visual guide with screenshots showing how to configure each field in the Discord Developer Portal, please refer to the [docs/images](./docs/images) directory.
@@ -45,7 +52,7 @@ After creating your Discord Profile Widget, add the following fields under **Gam
 | `prs` | Number | Total pull requests |
 
 ### 3. Get Discord Credentials
-1. Go to the [Discord Developer Portal](https://discord.com/developers) and select your app.
+1. Go to the [Discord Developer Portal](https://discord.com/developers/applications) and select your app.
 2. Copy the **Application ID** from General Information. (`DISCORD_APPLICATION_ID`)
 3. Copy your Bot token from the **Bot** tab (click **Reset Token**). (`DISCORD_BOT_TOKEN`)
 4. Click your profile in Discord and click **Copy User ID**. (`DISCORD_USER_ID`) (Note: If this option does not appear, enable **Developer Mode** first in Discord Settings -> Developer).
@@ -76,6 +83,44 @@ After creating your Discord Profile Widget, add the following fields under **Gam
 3. In the left sidebar under **Workflows**, select **Update Discord Profile Widget**.
 4. On the right side, click the **Run workflow** dropdown and click the green **Run workflow** button to trigger the sync manually.
 
+## Option B: Deploy with Cloudflare Workers (instead of GitHub Actions)
+
+This project can also run as a [Cloudflare Worker](https://workers.cloudflare.com/) with a built-in hourly Cron Trigger, so you don't need to rely on GitHub Actions at all.
+
+> [!IMPORTANT]
+> **Pick one scheduler.** To avoid the widget being updated twice an hour (once by GitHub Actions and once by the Worker), disable the GitHub Actions workflow when using the Worker. No Settings needed — just edit one line at the top of [`.github/workflows/update-widget.yml`](./.github/workflows/update-widget.yml): set `DEFAULT_ENABLED: "false"`. (You can still force a manual run from the Actions tab via the `force_run` input.) Conversely, if you keep GitHub Actions, do not also deploy the Worker. Optionally, a repo variable `GH_ACTIONS_ENABLED` (Settings → Secrets and variables → Actions → Variables) can override the in-file default if you prefer.
+
+### 1. Install Wrangler (local use only)
+Wrangler is **not** a project dependency — the Cloudflare build uses its own copy. If you want to deploy locally, install it globally:
+```bash
+npm install -g wrangler
+```
+
+### 2. Set Worker Secrets
+The same credentials from [Steps 3–4](#3-get-discord-credentials) are stored as Cloudflare secrets (not GitHub secrets):
+```bash
+wrangler secret put GH_USERNAME
+wrangler secret put GH_PAT
+wrangler secret put DISCORD_APPLICATION_ID
+wrangler secret put DISCORD_USER_ID
+wrangler secret put DISCORD_BOT_TOKEN
+wrangler secret put MANUAL_TRIGGER_TOKEN   # used to protect the manual HTTP trigger
+```
+
+### 3. Deploy
+If you connected your repo to Cloudflare via the dashboard, it auto-detects `wrangler.toml` and runs `wrangler deploy` on push. To deploy locally instead:
+```bash
+wrangler deploy
+```
+The Worker is configured in [`wrangler.toml`](./wrangler.toml) to run hourly via a Cron Trigger (`0 * * * *`). Note that sub-daily cron schedules require a Cloudflare Workers plan that supports them.
+
+### 4. (Optional) Manual Trigger
+The Worker also exposes an HTTP endpoint so you can sync on demand:
+```bash
+curl -H "Authorization: Bearer $MANUAL_TRIGGER_TOKEN" https://<your-worker-subdomain>.workers.dev/
+```
+Set `MANUAL_TRIGGER_TOKEN` to any secret string of your choice (the same value used in the secret above).
+
 ## Local Development
 
 1. Clone and install dependencies:
@@ -100,9 +145,14 @@ After creating your Discord Profile Widget, add the following fields under **Gam
    npm start
    ```
 
+## Troubleshooting                                                                                                                                                               
+
+If you run into any issues during setup or syncing (such as the `APPLICATION_IDENTITY_PROVIDER_USER_ID_MISMATCH` error), please refer to the [Troubleshooting Guide](./docs/troubleshooting.md).
+
 ## Credits
 
-Special thanks to [Chloe Cinders](https://chloecinders.com/blog/discord-widgets#displaying-the-widget-on-your-profile) for documenting Discord Profile Widgets and making this project possible.
+- Special thanks to [Chloe Cinders](https://chloecinders.com/blog/discord-widgets#displaying-the-widget-on-your-profile) for documenting Discord Profile Widgets and making this project possible.
+- Thanks to [TheCreativeGod](https://github.com/TheCreativeGod) for creating [Discord-Widgets-Extension](https://github.com/TheCreativeGod/Discord-Widgets-Extension), which simplifies creating and configuring Discord Profile Widgets.
 
 ## License
 
