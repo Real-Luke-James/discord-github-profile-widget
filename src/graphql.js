@@ -46,7 +46,7 @@ export async function fetchUserData(username, token) {
             }
           }
         }
-        repositories(first: 100, privacy: PUBLIC, ownerAffiliations: OWNER, orderBy: {field: PUSHED_AT, direction: DESC}) {
+        repositories(first: 100, privacy: PUBLIC, ownerAffiliations: [OWNER, COLLABORATOR, ORGANIZATION_MEMBER], orderBy: {field: PUSHED_AT, direction: DESC}) {
           pageInfo {
             hasNextPage
             endCursor
@@ -93,7 +93,7 @@ export async function fetchMoreRepositories(username, cursor, token) {
   const query = `
     query($username: String!, $cursor: String!) {
       user(login: $username) {
-        repositories(first: 100, after: $cursor, privacy: PUBLIC, ownerAffiliations: OWNER, orderBy: {field: PUSHED_AT, direction: DESC}) {
+        repositories(first: 100, after: $cursor, privacy: PUBLIC, ownerAffiliations: [OWNER, COLLABORATOR, ORGANIZATION_MEMBER], orderBy: {field: PUSHED_AT, direction: DESC}) {
           pageInfo {
             hasNextPage
             endCursor
