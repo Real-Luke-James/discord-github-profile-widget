@@ -46,6 +46,17 @@ export async function getGitHubStats(username, token) {
     }
   }
 
+  const EXCLUDED_REPOS = new Set([username, 'discord-github-profile-widget'])
+
+  const sortedRepos = allRepos
+  .filter(r => r && !EXCLUDED_REPOS.has(r.name))
+  .sort((a, b) => {
+    if (!a.pushedAt && !b.pushedAt) return 0;
+    if (!a.pushedAt) return 1;
+    if (!b.pushedAt) return -1;
+    return new Date(b.pushedAt) - new Date(a.pushedAt);
+  });
+
   let totalStarsInt = 0;
   let totalForksInt = 0;
   
