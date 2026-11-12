@@ -46,17 +46,6 @@ export async function getGitHubStats(username, token) {
     }
   }
 
-  const EXCLUDED_REPOS = new Set([username, 'discord-github-profile-widget'])
-
-  const sortedRepos = allRepos
-  .filter(r => r && !EXCLUDED_REPOS.has(r.name))
-  .sort((a, b) => {
-    if (!a.pushedAt && !b.pushedAt) return 0;
-    if (!a.pushedAt) return 1;
-    if (!b.pushedAt) return -1;
-    return new Date(b.pushedAt) - new Date(a.pushedAt);
-  });
-
   let totalStarsInt = 0;
   let totalForksInt = 0;
   
@@ -70,32 +59,42 @@ export async function getGitHubStats(username, token) {
   let totalStars = totalStarsInt.toString();
   let totalForks = totalForksInt.toString();
 
-  const sortedRepos = [...allRepos].sort((a, b) => {
+// Repos to ignore when picking the "latest" one (your stats/profile repo)
+const EXCLUDED_REPOS = new Set(
+  [username, 'your-stats-repo-name'].map(n => n.toLowerCase())
+);
+
+// Matches the commit message your workflow/bot uses
+const BOT_COMMIT_PATTERN = /update.*stats/i;
+
+const truncate = (str, max = 100) =>
+  str.length > max ? str.slice(0, max - 3) + '...' : str;
+
+const sortedRepos = allRepos
+  .filter(r => r && r.name && !EXCLUDED_REPOS.has(r.name.toLowerCase()))
+  .sort((a, b) => {
+    if (!a.pushedAt && !b.pushedAt) return 0;
     if (!a.pushedAt) return 1;
     if (!b.pushedAt) return -1;
     return new Date(b.pushedAt) - new Date(a.pushedAt);
   });
 
-  let lastRepo = '—';
-  let lastCommit = '—';
+let lastRepo = '—';
+let lastCommit = '—';
 
-  if (sortedRepos.length > 0 && sortedRepos[0]) {
-    lastRepo = sortedRepos[0].name;
-    if (lastRepo.length > 100) {
-      lastRepo = lastRepo.slice(0, 97) + '...';
-    }
+const latest = sortedRepos[0];
+if (latest) {
+  lastRepo = truncate(latest.name);
 
-    const commitNode = sortedRepos[0].defaultBranchRef?.target?.history?.nodes?.[0];
-    if (commitNode && commitNode.message) {
-      const rawCommitMsg = commitNode.message.replace(/\n.*/s, '');
-      if (rawCommitMsg.length > 100) {
-        lastCommit = rawCommitMsg.slice(0, 97) + '...';
-      } else {
-        lastCommit = rawCommitMsg;
-      }
-    }
+  const commits = latest.defaultBranchRef?.target?.history?.nodes || [];
+  const commitNode = commits.find(
+    c => c?.message && !BOT_COMMIT_PATTERN.test(c.message)
+  );
+
+  if (commitNode) {
+    lastCommit = truncate(commitNode.message.split('\n')[0]);
   }
-
+}
   const topLanguage = determineTopLanguage(allRepos);
   const joined = formatJoinedDate(user.createdAt);
 
